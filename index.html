@@ -1,3 +1,33 @@
-<canvas></canvas>
+<html>
+  <head>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="wrapper">
+      <div class="GUI-top">
+        <div class="GUI-top__health-bar GUI-top__health-bar--player">
+          <div
+            class="health-bar__value health-bar__value--player"
+            id="playerHealth"
+          ></div>
+        </div>
 
-<script src="app.js"></script>
+        <div class="GUI-top__timer" id="timer"></div>
+
+        <div class="GUI-top__health-bar GUI-top__health-bar--enemy">
+          <div
+            class="health-bar__value health-bar__value--enemy"
+            id="enemyHealth"
+          ></div>
+        </div>
+      </div>
+      <div class="GUI-massage" id="massage"></div>
+      <canvas></canvas>
+    </main>
+
+    <script src="js/sprite.js"></script>
+    <script src="js/fighter.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
