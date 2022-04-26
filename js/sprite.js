@@ -7,15 +7,15 @@ class Sprite {
     this.image.src = imageSrc;
     this.scale = scale;
     this.frames = frames;
-    this.curFrame = 0;
+    this.framesCurrent = 0;
     this.framesElapsed = 0;
-    this.framesHold = 10;
+    this.framesHold = 5;
   }
 
   draw() {
     c.drawImage(
       this.image,
-      (this.curFrame * this.image.width) / this.frames,
+      (this.framesCurrent * this.image.width) / this.frames,
       0,
       this.image.width / this.frames,
       this.image.height,
@@ -32,10 +32,10 @@ class Sprite {
     this.framesElapsed++;
 
     if (this.framesElapsed % this.framesHold === 0) {
-      if (this.curFrame < this.frames - 1) {
-        this.curFrame++;
+      if (this.framesCurrent < this.frames - 1) {
+        this.framesCurrent++;
       } else {
-        this.curFrame = 0;
+        this.framesCurrent = 0;
       }
     }
   }

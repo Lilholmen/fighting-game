@@ -1,8 +1,13 @@
-class Fighter {
-  constructor({ position, velocity, color, offset }) {
-    this.position = position;
+class Fighter extends Sprite {
+  constructor({ position, velocity, offset, imageSrc, scale = 1, frames = 1 }) {
+    super({
+      position,
+      imageSrc,
+      scale,
+      frames,
+    });
+
     this.velocity = velocity;
-    this.color = color;
     this.height = 150;
     this.width = 50;
     this.lastKey;
@@ -19,6 +24,10 @@ class Fighter {
       height: 50,
     };
     this.isAttacking;
+
+    this.framesCurrent = 0;
+    this.framesElapsed = 0;
+    this.framesHold = 5;
   }
 
   draw() {

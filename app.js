@@ -58,15 +58,17 @@ const shop = new Sprite({
 const player = new Fighter({
   position: { x: 0, y: 0 },
   velocity: { x: 0, y: 0 },
-  color: 'green',
   offset: { x: 0, y: 0 },
+  imageSrc: './img/hero1/Idle.png',
+  frames: 8,
 });
 
 const enemy = new Fighter({
   position: { x: 400, y: 100 },
   velocity: { x: 0, y: 0 },
-  color: 'red',
   offset: { x: -50, y: 0 },
+  imageSrc: './img/hero2/Idle.png',
+  frames: 4,
 });
 
 let timerId;
