@@ -17,6 +17,5 @@ function cordToXY(cords) {
 }
 
 window.addEventListener('keydown', (event) => {
-  console.log(event.key, event.keyCode, event.code);
-  console.log(event);
+  console.log(event.key, event.keyCode, event.code, timer.currentValue);
 });

@@ -4,24 +4,13 @@ const c = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
-const timer = {
-  value: 100,
-  displayDiv: document.querySelector('#timer'),
-
-  updateTime() {
-    this.displayDiv.textContent = this.value;
-  },
-};
-
 const massage = {
   displayDiv: document.querySelector('#massage'),
   win: 'You win',
   lose: 'You lose',
   tie: 'Tie',
 
-  displayMassage(player1, player2, timerId) {
-    clearTimeout(timerId);
-
+  displayMassage(player1, player2) {
     this.displayDiv.textContent =
       player1.health > player2.health
         ? this.win
@@ -29,6 +18,14 @@ const massage = {
         ? this.lose
         : this.tie;
   },
+};
+
+const controlsP1 = { left: 'KeyA', right: 'KeyD', up: 'KeyW', down: 'KeyS' };
+const controlsP2 = {
+  left: 'ArrowLeft',
+  right: 'ArrowRight',
+  up: 'ArrowUp',
+  down: 'ArrowDown',
 };
 
 const gravity = 0.7;
@@ -67,10 +64,10 @@ const player = new Fighter({
     height: 120,
   },
   controls: {
-    moveLeft: { value: 'KeyA', pressed: false },
-    moveRight: { value: 'KeyD', pressed: false },
-    jump: { value: 'KeyW', pressed: false },
-    attack: { value: 'KeyS', pressed: false },
+    moveLeft: { value: controlsP1.left, pressed: false },
+    moveRight: { value: controlsP1.right, pressed: false },
+    jump: { value: controlsP1.up, pressed: false },
+    attack: { value: controlsP1.down, pressed: false },
     lastPressed: undefined,
   },
 });
@@ -97,17 +94,16 @@ const enemy = new Fighter({
     height: 120,
   },
   controls: {
-    moveLeft: { value: 'ArrowLeft', pressed: false },
-    moveRight: { value: 'ArrowRight', pressed: false },
-    jump: { value: 'ArrowUp', pressed: false },
-    attack: { value: 'ArrowDown', pressed: false },
+    moveLeft: { value: controlsP2.left, pressed: false },
+    moveRight: { value: controlsP2.right, pressed: false },
+    jump: { value: controlsP2.up, pressed: false },
+    attack: { value: controlsP2.down, pressed: false },
     lastPressed: undefined,
   },
 });
 
-let timerId;
-timer.updateTime();
-decreaseTimer();
+const timer = new Timer({ duration: 10 });
+timer.start();
 
 animate();
 
@@ -197,7 +193,7 @@ function animate() {
       document.querySelector('#enemyHealth').style.width = enemy.health + '%';
     } else {
       document.querySelector('#enemyHealth').style.width = 0;
-      massage.displayMassage(player, enemy, timerId);
+      massage.displayMassage(player, enemy);
     }
   }
 
@@ -217,7 +213,7 @@ function animate() {
       document.querySelector('#playerHealth').style.width = player.health + '%';
     } else {
       document.querySelector('#playerHealth').style.width = 0;
-      massage.displayMassage(player, enemy, timerId);
+      massage.displayMassage(player, enemy);
     }
   }
 
@@ -227,11 +223,29 @@ function animate() {
 }
 
 window.addEventListener('keydown', (event) => {
-  player.control(event.code, 'keydown');
-  enemy.control(event.code, 'keydown');
+  const keyCode = event.code;
+
+  if (Object.values(controlsP1).includes(keyCode)) {
+    player.control(keyCode, 'keydown');
+  } else if (Object.values(controlsP2).includes(keyCode)) {
+    enemy.control(keyCode, 'keydown');
+  }
+
+  if (keyCode === 'Space') {
+    timer.pause();
+  }
 });
 
 window.addEventListener('keyup', (event) => {
-  player.control(event.code, 'keyup');
-  enemy.control(event.code, 'keyup');
+  const keyCode = event.code;
+
+  if (Object.values(controlsP1).includes(keyCode)) {
+    player.control(keyCode, 'keyup');
+  } else if (Object.values(controlsP2).includes(keyCode)) {
+    enemy.control(keyCode, 'keyup');
+  }
+
+  if (keyCode === 'Space') {
+    timer.continue();
+  }
 });

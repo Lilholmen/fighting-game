@@ -1,13 +1,3 @@
-function decreaseTimer() {
-  if (timer.value > 0) {
-    timerId = setTimeout(decreaseTimer, 1000);
-    timer.value--;
-    timer.updateTime();
-  } else {
-    massage.displayMassage(player, enemy, timerId);
-  }
-}
-
 function rectangularCollision({ rect1, rect2 }) {
   return (
     rect1.attackBox.position.x + rect1.attackBox.width >= rect2.position.x &&
