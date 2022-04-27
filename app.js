@@ -108,11 +108,12 @@ animate();
 function animate() {
   window.requestAnimationFrame(animate);
 
-  c.fillStyle = '#3e3e3e';
-  c.fillRect(0, 0, canvas.width, canvas.height);
-
   background.update();
   shop.update();
+
+  c.fillStyle = 'rgba(255,255,255, 0.1';
+  c.fillRect(0, 0, canvas.width, canvas.height);
+
   player.update();
   enemy.update();
 
