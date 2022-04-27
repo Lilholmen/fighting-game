@@ -78,3 +78,17 @@
   color: #f0f0f0;
   font-size: 36px;
 }
+
+.debug {
+  padding-top: 100px;
+  display: flex;
+}
+
+.debug__info {
+  width: 50%;
+}
+
+.info__data {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-bottom: 10px;
+}

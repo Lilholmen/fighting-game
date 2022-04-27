@@ -3,11 +3,12 @@ class Fighter extends Sprite {
     position,
     velocity,
     imageSrc,
-    scale = 1,
+    scale = { x: 1, y: 1 },
     frames = 1,
     offset = { x: 0, y: 0 },
     sprites,
     attackBox = { offset: {}, width: undefined, height: undefined },
+    controls,
   }) {
     super({
       position,
@@ -23,7 +24,9 @@ class Fighter extends Sprite {
     this.lastKey;
     this.health = 100;
     this.damage = 15;
+    this.isOnTheGround = false;
     this.isDead = false;
+    this.controls = controls;
 
     this.attackBox = {
       position: {
@@ -64,6 +67,7 @@ class Fighter extends Sprite {
     if (this.position.y + this.height + this.velocity.y >= canvas.height - 59) {
       this.velocity.y = 0;
       this.position.y = 367;
+      this.isOnTheGround = true;
     } else {
       this.velocity.y += gravity;
     }
@@ -81,6 +85,42 @@ class Fighter extends Sprite {
       this.switchSprite('takeHit');
     } else {
       this.switchSprite('death');
+    }
+  }
+
+  control(keyPressed, type) {
+    if (type === 'keydown') {
+      if (!this.isDead) {
+        switch (keyPressed) {
+          case this.controls.jump.value:
+            if (this.velocity.y === 0) {
+              this.velocity.y = -20;
+            }
+            break;
+          case this.controls.moveLeft.value:
+            this.controls.moveLeft.pressed = true;
+            this.controls.lastPressed = this.controls.moveLeft.value;
+            break;
+          case this.controls.moveRight.value:
+            this.controls.moveRight.pressed = true;
+            this.controls.lastPressed = this.controls.moveRight.value;
+            break;
+          case this.controls.attack.value:
+            this.attack();
+            break;
+        }
+      }
+    }
+
+    if (type === 'keyup') {
+      switch (keyPressed) {
+        case this.controls.moveLeft.value:
+          this.controls.moveLeft.pressed = false;
+          break;
+        case this.controls.moveRight.value:
+          this.controls.moveRight.pressed = false;
+          break;
+      }
     }
   }
 

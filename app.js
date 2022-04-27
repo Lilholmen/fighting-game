@@ -5,7 +5,7 @@ canvas.width = 1024;
 canvas.height = 576;
 
 const timer = {
-  value: 30,
+  value: 100,
   displayDiv: document.querySelector('#timer'),
 
   updateTime() {
@@ -33,14 +33,6 @@ const massage = {
 
 const gravity = 0.7;
 
-const keys = {
-  a: { pressed: false },
-  d: { pressed: false },
-
-  arrowLeft: { pressed: false },
-  arrowRight: { pressed: false },
-};
-
 const background = new Sprite({
   position: { x: 0, y: 0 },
   imageSrc: './img/background.png',
@@ -49,17 +41,17 @@ const background = new Sprite({
 const shop = new Sprite({
   position: { x: 570, y: 163 },
   imageSrc: './img/shop.png',
-  scale: 2.75,
+  scale: { x: 2.75, y: 2.75 },
   frames: 6,
 });
 
 const player = new Fighter({
-  position: { x: 0, y: 0 },
+  position: { x: 100, y: 350 },
   velocity: { x: 0, y: 0 },
   offset: { x: 200, y: 155 },
   imageSrc: './img/hero1/Idle.png',
   frames: 8,
-  scale: 2.5,
+  scale: { x: 2.5, y: 2.5 },
   sprites: {
     idle: { imageSrc: './img/hero1/Idle.png', frames: 8 },
     run: { imageSrc: './img/hero1/Run.png', frames: 8 },
@@ -74,15 +66,22 @@ const player = new Fighter({
     width: 200,
     height: 120,
   },
+  controls: {
+    moveLeft: { value: 'KeyA', pressed: false },
+    moveRight: { value: 'KeyD', pressed: false },
+    jump: { value: 'KeyW', pressed: false },
+    attack: { value: 'KeyS', pressed: false },
+    lastPressed: undefined,
+  },
 });
 
 const enemy = new Fighter({
-  position: { x: 400, y: 100 },
+  position: { x: 800, y: 350 },
   velocity: { x: 0, y: 0 },
   offset: { x: 200, y: 170 },
   imageSrc: './img/hero2/Idle.png',
   frames: 4,
-  scale: 2.5,
+  scale: { x: 2.5, y: 2.5 },
   sprites: {
     idle: { imageSrc: './img/hero2/Idle.png', frames: 4 },
     run: { imageSrc: './img/hero2/Run.png', frames: 8 },
@@ -96,6 +95,13 @@ const enemy = new Fighter({
     offset: { x: -158, y: 0 },
     width: 200,
     height: 120,
+  },
+  controls: {
+    moveLeft: { value: 'ArrowLeft', pressed: false },
+    moveRight: { value: 'ArrowRight', pressed: false },
+    jump: { value: 'ArrowUp', pressed: false },
+    attack: { value: 'ArrowDown', pressed: false },
+    lastPressed: undefined,
   },
 });
 
@@ -114,18 +120,30 @@ function animate() {
   c.fillStyle = 'rgba(255,255,255, 0.1';
   c.fillRect(0, 0, canvas.width, canvas.height);
 
+  getDebugInfo(player, enemy);
+
   player.update();
   enemy.update();
 
   enemy.velocity.x = 0;
   player.velocity.x = 0;
   //player movements
-  if (keys.a.pressed && player.lastKey === 'a') {
+  if (
+    player.controls.moveLeft.pressed &&
+    player.controls.lastPressed === player.controls.moveLeft.value
+  ) {
     player.switchSprite('run');
-    player.velocity.x = -5;
-  } else if (keys.d.pressed && player.lastKey === 'd') {
+    if (player.position.x >= 0) {
+      player.velocity.x = -5;
+    }
+  } else if (
+    player.controls.moveRight.pressed &&
+    player.controls.lastPressed === player.controls.moveRight.value
+  ) {
     player.switchSprite('run');
-    player.velocity.x = 5;
+    if (player.position.x <= canvas.width - player.width * 2) {
+      player.velocity.x = 5;
+    }
   } else {
     player.switchSprite('idle');
   }
@@ -137,12 +155,22 @@ function animate() {
     player.switchSprite('fall');
   }
   //enemy movement
-  if (keys.arrowLeft.pressed && enemy.lastKey === 'ArrowLeft') {
+  if (
+    enemy.controls.moveLeft.pressed &&
+    enemy.controls.lastPressed === enemy.controls.moveLeft.value
+  ) {
     enemy.switchSprite('run');
-    enemy.velocity.x = -5;
-  } else if (keys.arrowRight.pressed && enemy.lastKey === 'ArrowRight') {
+    if (enemy.position.x >= 0) {
+      enemy.velocity.x = -5;
+    }
+  } else if (
+    enemy.controls.moveRight.pressed &&
+    enemy.controls.lastPressed === enemy.controls.moveRight.value
+  ) {
     enemy.switchSprite('run');
-    enemy.velocity.x = 5;
+    if (enemy.position.x <= canvas.width - enemy.width * 2) {
+      enemy.velocity.x = 5;
+    }
   } else {
     enemy.switchSprite('idle');
   }
@@ -199,59 +227,11 @@ function animate() {
 }
 
 window.addEventListener('keydown', (event) => {
-  if (!player.isDead) {
-    switch (event.key) {
-      case 'w':
-        player.velocity.y = -20;
-        break;
-      case 'a':
-        keys.a.pressed = true;
-        player.lastKey = 'a';
-        break;
-      case 'd':
-        keys.d.pressed = true;
-        player.lastKey = 'd';
-        break;
-      case 's':
-        player.attack();
-        break;
-    }
-  }
-
-  if (!enemy.isDead) {
-    switch (event.key) {
-      case 'ArrowUp':
-        enemy.velocity.y = -20;
-        break;
-      case 'ArrowLeft':
-        keys.arrowLeft.pressed = true;
-        enemy.lastKey = 'ArrowLeft';
-        break;
-      case 'ArrowRight':
-        keys.arrowRight.pressed = true;
-        enemy.lastKey = 'ArrowRight';
-        break;
-      case 'ArrowDown':
-        enemy.attack();
-        break;
-    }
-  }
+  player.control(event.code, 'keydown');
+  enemy.control(event.code, 'keydown');
 });
 
 window.addEventListener('keyup', (event) => {
-  switch (event.key) {
-    case 'a':
-      keys.a.pressed = false;
-      break;
-    case 'd':
-      keys.d.pressed = false;
-      break;
-
-    case 'ArrowLeft':
-      keys.arrowLeft.pressed = false;
-      break;
-    case 'ArrowRight':
-      keys.arrowRight.pressed = false;
-      break;
-  }
+  player.control(event.code, 'keyup');
+  enemy.control(event.code, 'keyup');
 });

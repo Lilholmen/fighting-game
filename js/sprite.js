@@ -2,7 +2,7 @@ class Sprite {
   constructor({
     position,
     imageSrc,
-    scale = 1,
+    scale = { x: 1, y: 1 },
     frames = 1,
     offset = { x: 0, y: 0 },
   }) {
@@ -30,8 +30,8 @@ class Sprite {
 
       this.position.x - this.offset.x,
       this.position.y - this.offset.y,
-      (this.image.width * this.scale) / this.frames,
-      this.image.height * this.scale
+      (this.image.width * this.scale.x) / this.frames,
+      this.image.height * this.scale.y
     );
   }
 
