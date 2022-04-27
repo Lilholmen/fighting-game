@@ -102,7 +102,7 @@ const enemy = new Fighter({
   },
 });
 
-const timer = new Timer({ duration: 10 });
+const timer = new Timer({ duration: 3 });
 timer.start();
 
 animate();
@@ -229,9 +229,7 @@ window.addEventListener('keydown', (event) => {
     player.control(keyCode, 'keydown');
   } else if (Object.values(controlsP2).includes(keyCode)) {
     enemy.control(keyCode, 'keydown');
-  }
-
-  if (keyCode === 'Space') {
+  } else if (keyCode === 'Space') {
     timer.pause();
   }
 });
@@ -243,9 +241,11 @@ window.addEventListener('keyup', (event) => {
     player.control(keyCode, 'keyup');
   } else if (Object.values(controlsP2).includes(keyCode)) {
     enemy.control(keyCode, 'keyup');
-  }
-
-  if (keyCode === 'Space') {
+  } else if (keyCode === 'Space') {
     timer.continue();
   }
+});
+
+document.querySelector('#timer').addEventListener('click', () => {
+  timer.pause();
 });

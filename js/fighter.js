@@ -88,6 +88,8 @@ class Fighter extends Sprite {
     }
   }
 
+  //------------------------------Controls------------------------------
+
   control(keyPressed, type) {
     if (type === 'keydown') {
       if (!this.isDead) {
@@ -123,6 +125,8 @@ class Fighter extends Sprite {
       }
     }
   }
+
+  //------------------------------Sprites------------------------------
 
   switchSprite(sprite) {
     if (this.image === this.sprites.death.image) {

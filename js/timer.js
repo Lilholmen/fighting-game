@@ -18,7 +18,6 @@ class Timer {
 
   continue() {
     if (this.currentValue > 0) {
-      console.log(this.currentValue);
       this.timerId = setTimeout(this.continue.bind(this), 100);
       this.currentValue--;
       this.guiTimer.textContent = Math.ceil(this.currentValue / 10);
