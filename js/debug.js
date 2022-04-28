@@ -1,5 +1,5 @@
 const debugMode = {
-  isOn: true,
+  isOn: false,
   htmlElement: document.querySelector('.debug'),
 
   switcher() {
@@ -30,5 +30,10 @@ function cordToXY(cords) {
 }
 
 window.addEventListener('keydown', (event) => {
-  console.log(event.key, event.keyCode, event.code, timer.currentValue);
+  console.log(
+    event.key,
+    event.keyCode,
+    event.code,
+    gameEntities.timer.currentValue
+  );
 });

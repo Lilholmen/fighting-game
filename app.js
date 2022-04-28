@@ -4,22 +4,6 @@ const c = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
-const massage = {
-  displayDiv: document.querySelector('#massage'),
-  win: 'You win',
-  lose: 'You lose',
-  tie: 'Tie',
-
-  displayMassage(player1, player2) {
-    this.displayDiv.textContent =
-      player1.health > player2.health
-        ? this.win
-        : player2.health > player1.health
-        ? this.lose
-        : this.tie;
-  },
-};
-
 const gravity = 0.7;
 
 const background = new Sprite({
@@ -34,15 +18,36 @@ const shop = new Sprite({
   frames: 6,
 });
 
-const player = getFighter({ type: 'P1', skin: 'character7' });
+const gameEntities = {
+  player: null,
+  enemy: null,
+  timer: null,
+};
 
-const enemy = getFighter({ type: 'P2', skin: 'character2' });
+start();
+
+function start() {
+  gameEntities.player = getFighter({ type: 'P1', skin: 'character1' });
+
+  gameEntities.enemy = getFighter({ type: 'P2', skin: 'enemy' });
+
+  gameEntities.timer = new Timer({ duration: 99 });
+
+  showMenu('firstStart');
+  console.log(gameEntities);
+
+  animate();
+}
+
+/* const player = getFighter({ type: 'P1', skin: 'character7' });
+
+const enemy = getFighter({ type: 'P2', skin: 'enemy' });
 
 const timer = new Timer({ duration: 99 });
 
 showMenu('firstStart');
 
-animate();
+animate(); */
 
 function animate() {
   window.requestAnimationFrame(animate);
@@ -53,117 +58,141 @@ function animate() {
   c.fillStyle = 'rgba(255,255,255, 0.1';
   c.fillRect(0, 0, canvas.width, canvas.height);
 
-  if (timer.isRunning) {
+  if (gameEntities.timer.isRunning) {
     playersAnimation();
   }
 }
 
 function playersAnimation() {
   if (debugMode.isOn) {
-    getDebugInfo(player, enemy);
+    getDebugInfo(gameEntities.player, gameEntities.enemy);
   }
 
-  player.update();
-  enemy.update();
+  gameEntities.player.update();
+  gameEntities.enemy.update();
 
-  enemy.velocity.x = 0;
-  player.velocity.x = 0;
+  gameEntities.enemy.velocity.x = 0;
+  gameEntities.player.velocity.x = 0;
   //player movements
   if (
-    player.controls.moveLeft.pressed &&
-    player.controls.lastPressed === player.controls.moveLeft.value
+    gameEntities.player.controls.moveLeft.pressed &&
+    gameEntities.player.controls.lastPressed ===
+      gameEntities.player.controls.moveLeft.value
   ) {
-    player.switchSprite('run');
-    if (player.position.x >= 0) {
-      player.velocity.x = -5;
+    gameEntities.player.switchSprite('run');
+    if (gameEntities.player.position.x >= 0) {
+      gameEntities.player.velocity.x = -5;
     }
   } else if (
-    player.controls.moveRight.pressed &&
-    player.controls.lastPressed === player.controls.moveRight.value
+    gameEntities.player.controls.moveRight.pressed &&
+    gameEntities.player.controls.lastPressed ===
+      gameEntities.player.controls.moveRight.value
   ) {
-    player.switchSprite('run');
-    if (player.position.x <= canvas.width - player.hitBox.width) {
-      player.velocity.x = 5;
+    gameEntities.player.switchSprite('run');
+    if (
+      gameEntities.player.position.x <=
+      canvas.width - gameEntities.player.hitBox.width
+    ) {
+      gameEntities.player.velocity.x = 5;
     }
   } else {
-    player.switchSprite('idle');
+    gameEntities.player.switchSprite('idle');
   }
 
-  if (player.velocity.y < 0) {
-    player.switchSprite('jump');
+  if (gameEntities.player.velocity.y < 0) {
+    gameEntities.player.switchSprite('jump');
   }
-  if (player.velocity.y > 0) {
-    player.switchSprite('fall');
+  if (gameEntities.player.velocity.y > 0) {
+    gameEntities.player.switchSprite('fall');
   }
   //enemy movement
   if (
-    enemy.controls.moveLeft.pressed &&
-    enemy.controls.lastPressed === enemy.controls.moveLeft.value
+    gameEntities.enemy.controls.moveLeft.pressed &&
+    gameEntities.enemy.controls.lastPressed ===
+      gameEntities.enemy.controls.moveLeft.value
   ) {
-    enemy.switchSprite('run');
-    if (enemy.position.x >= 0) {
-      enemy.velocity.x = -5;
+    gameEntities.enemy.switchSprite('run');
+    if (gameEntities.enemy.position.x >= 0) {
+      gameEntities.enemy.velocity.x = -5;
     }
   } else if (
-    enemy.controls.moveRight.pressed &&
-    enemy.controls.lastPressed === enemy.controls.moveRight.value
+    gameEntities.enemy.controls.moveRight.pressed &&
+    gameEntities.enemy.controls.lastPressed ===
+      gameEntities.enemy.controls.moveRight.value
   ) {
-    enemy.switchSprite('run');
-    if (enemy.position.x <= canvas.width - enemy.hitBox.width) {
-      enemy.velocity.x = 5;
+    gameEntities.enemy.switchSprite('run');
+    if (
+      gameEntities.enemy.position.x <=
+      canvas.width - gameEntities.enemy.hitBox.width
+    ) {
+      gameEntities.enemy.velocity.x = 5;
     }
   } else {
-    enemy.switchSprite('idle');
+    gameEntities.enemy.switchSprite('idle');
   }
 
-  if (enemy.velocity.y < 0) {
-    enemy.switchSprite('jump');
+  if (gameEntities.enemy.velocity.y < 0) {
+    gameEntities.enemy.switchSprite('jump');
   }
-  if (enemy.velocity.y > 0) {
-    enemy.switchSprite('fall');
+  if (gameEntities.enemy.velocity.y > 0) {
+    gameEntities.enemy.switchSprite('fall');
   }
 
   //collision
 
   //player
   if (
-    rectangularCollision({ rect1: player, rect2: enemy }) &&
-    player.isAttacking &&
-    player.framesCurrent === player.attackFrame
+    rectangularCollision({
+      rect1: gameEntities.player,
+      rect2: gameEntities.enemy,
+    }) &&
+    gameEntities.player.isAttacking &&
+    gameEntities.player.framesCurrent === gameEntities.player.attackFrame
   ) {
-    enemy.takeHit(player.damage);
-    player.isAttacking = false;
+    gameEntities.enemy.takeHit(gameEntities.player.damage);
+    gameEntities.player.isAttacking = false;
 
-    if (enemy.health > 0) {
-      document.querySelector('#enemyHealth').style.width = enemy.health + '%';
+    if (gameEntities.enemy.health > 0) {
+      document.querySelector('#enemyHealth').style.width =
+        gameEntities.enemy.health + '%';
     } else {
       document.querySelector('#enemyHealth').style.width = 0;
-      massage.displayMassage(player, enemy);
+      massage.displayMassage(gameEntities.player, gameEntities.enemy);
     }
   }
 
-  if (player.isAttacking && player.framesCurrent === player.attackFrame) {
-    player.isAttacking = false;
+  if (
+    gameEntities.player.isAttacking &&
+    gameEntities.player.framesCurrent === gameEntities.player.attackFrame
+  ) {
+    gameEntities.player.isAttacking = false;
   }
 
   //enemy
   if (
-    rectangularCollision({ rect1: enemy, rect2: player }) &&
-    enemy.isAttacking
+    rectangularCollision({
+      rect1: gameEntities.enemy,
+      rect2: gameEntities.player,
+    }) &&
+    gameEntities.enemy.isAttacking
   ) {
-    player.takeHit(enemy.damage);
-    enemy.isAttacking = false;
+    gameEntities.player.takeHit(gameEntities.enemy.damage);
+    gameEntities.enemy.isAttacking = false;
 
-    if (player.health > 0) {
-      document.querySelector('#playerHealth').style.width = player.health + '%';
+    if (gameEntities.player.health > 0) {
+      document.querySelector('#playerHealth').style.width =
+        gameEntities.player.health + '%';
     } else {
       document.querySelector('#playerHealth').style.width = 0;
-      massage.displayMassage(player, enemy);
+      massage.displayMassage(gameEntities.player, gameEntities.enemy);
     }
   }
 
-  if (enemy.isAttacking && player.framesCurrent === enemy.attackFrame) {
-    enemy.isAttacking = false;
+  if (
+    gameEntities.enemy.isAttacking &&
+    gameEntities.player.framesCurrent === gameEntities.enemy.attackFrame
+  ) {
+    gameEntities.enemy.isAttacking = false;
   }
 }
 
@@ -174,7 +203,7 @@ window.addEventListener('keydown', (event) => {
     debugMode.switcher();
   } else if (keyCode === 'Space') {
     showMenu('pause');
-  } else if (timer.isRunning) {
+  } else if (gameEntities.timer.isRunning) {
     if (
       Object.values({
         left: 'KeyA',
@@ -183,7 +212,7 @@ window.addEventListener('keydown', (event) => {
         down: 'KeyS',
       }).includes(keyCode)
     ) {
-      player.control(keyCode, 'keydown');
+      gameEntities.player.control(keyCode, 'keydown');
     } else if (
       Object.values({
         left: 'ArrowLeft',
@@ -192,7 +221,7 @@ window.addEventListener('keydown', (event) => {
         down: 'ArrowDown',
       }).includes(keyCode)
     ) {
-      enemy.control(keyCode, 'keydown');
+      gameEntities.enemy.control(keyCode, 'keydown');
     }
   }
 });
@@ -202,7 +231,7 @@ window.addEventListener('keyup', (event) => {
 
   if (keyCode === 'Space') {
     showMenu('continue');
-  } else if (timer.isRunning) {
+  } else if (gameEntities.timer.isRunning) {
     if (
       Object.values({
         left: 'KeyA',
@@ -211,7 +240,7 @@ window.addEventListener('keyup', (event) => {
         down: 'KeyS',
       }).includes(keyCode)
     ) {
-      player.control(keyCode, 'keyup');
+      gameEntities.player.control(keyCode, 'keyup');
     } else if (
       Object.values({
         left: 'ArrowLeft',
@@ -220,7 +249,7 @@ window.addEventListener('keyup', (event) => {
         down: 'ArrowDown',
       }).includes(keyCode)
     ) {
-      enemy.control(keyCode, 'keyup');
+      gameEntities.enemy.control(keyCode, 'keyup');
     }
   }
 });

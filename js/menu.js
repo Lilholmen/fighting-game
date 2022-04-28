@@ -8,17 +8,17 @@ function showMenu(gameState) {
         .querySelector('.pause__start-button')
         .addEventListener('click', () => {
           menu.style.display = 'none';
-          timer.continue();
+          gameEntities.timer.continue();
         });
 
       break;
     case 'pause':
       menu.style.display = 'flex';
-      timer.pause();
+      gameEntities.timer.pause();
       break;
     case 'continue':
       menu.style.display = 'none';
-      timer.continue();
+      gameEntities.timer.continue();
       break;
   }
 }

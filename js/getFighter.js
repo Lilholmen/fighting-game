@@ -85,12 +85,12 @@ const characters = {
     },
     attackFrame: 2,
     hitBox: {
-      offset: { x: 10, y: 0 },
+      offset: { x: 27, y: 0 },
       width: 60,
       height: 150,
     },
     attackBox: {
-      offset: { x: -158, y: 0 },
+      offset: { x: 58, y: 0 },
       width: 200,
       height: 145,
     },
@@ -232,6 +232,33 @@ const characters = {
       offset: { x: 75, y: -72 },
       width: 170,
       height: 220,
+    },
+  },
+
+  enemy: {
+    offset: { x: 200, y: 170 },
+    imageSrc: '/img/enemy/Idle.png',
+    frames: 4,
+    scale: { x: 2.5, y: 2.5 },
+    sprites: {
+      idle: { imageSrc: '/img/enemy/Idle.png', frames: 4 },
+      run: { imageSrc: '/img/enemy/Run.png', frames: 8 },
+      jump: { imageSrc: '/img/enemy/Jump.png', frames: 2 },
+      fall: { imageSrc: '/img/enemy/Fall.png', frames: 2 },
+      attack: { imageSrc: '/img/enemy/Attack1.png', frames: 4 },
+      takeHit: { imageSrc: '/img/enemy/TakeHit.png', frames: 3 },
+      death: { imageSrc: '/img/enemy/Death.png', frames: 7 },
+    },
+    attackFrame: 2,
+    hitBox: {
+      offset: { x: 10, y: 0 },
+      width: 60,
+      height: 150,
+    },
+    attackBox: {
+      offset: { x: -158, y: 0 },
+      width: 200,
+      height: 145,
     },
   },
 };
