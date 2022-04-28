@@ -1,0 +1,29 @@
+* {
+  box-sizing: border-box;
+  font-family: 'Press Start 2P', cursive;
+}
+
+.wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.GUI {
+  position: absolute;
+  width: 1024px;
+  height: 576px;
+}
+
+.debug {
+  padding-top: 100px;
+  display: flex;
+}
+
+.debug__info {
+  width: 50%;
+}
+
+.info__data {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-bottom: 10px;
+}

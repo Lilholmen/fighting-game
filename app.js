@@ -20,14 +20,6 @@ const massage = {
   },
 };
 
-const controlsP1 = { left: 'KeyA', right: 'KeyD', up: 'KeyW', down: 'KeyS' };
-const controlsP2 = {
-  left: 'ArrowLeft',
-  right: 'ArrowRight',
-  up: 'ArrowUp',
-  down: 'ArrowDown',
-};
-
 const gravity = 0.7;
 
 const background = new Sprite({
@@ -42,68 +34,13 @@ const shop = new Sprite({
   frames: 6,
 });
 
-const player = new Fighter({
-  position: { x: 100, y: 350 },
-  velocity: { x: 0, y: 0 },
-  offset: { x: 200, y: 155 },
-  imageSrc: './img/hero1/Idle.png',
-  frames: 8,
-  scale: { x: 2.5, y: 2.5 },
-  sprites: {
-    idle: { imageSrc: './img/hero1/Idle.png', frames: 8 },
-    run: { imageSrc: './img/hero1/Run.png', frames: 8 },
-    jump: { imageSrc: './img/hero1/Jump.png', frames: 2 },
-    fall: { imageSrc: './img/hero1/Fall.png', frames: 2 },
-    attack: { imageSrc: './img/hero1/Attack1.png', frames: 6 },
-    takeHit: { imageSrc: './img/hero1/TakeHit.png', frames: 4 },
-    death: { imageSrc: './img/hero1/Death.png', frames: 6 },
-  },
-  attackBox: {
-    offset: { x: 73, y: 0 },
-    width: 200,
-    height: 120,
-  },
-  controls: {
-    moveLeft: { value: controlsP1.left, pressed: false },
-    moveRight: { value: controlsP1.right, pressed: false },
-    jump: { value: controlsP1.up, pressed: false },
-    attack: { value: controlsP1.down, pressed: false },
-    lastPressed: undefined,
-  },
-});
+const player = getFighter({ type: 'P1', skin: 'character1' });
 
-const enemy = new Fighter({
-  position: { x: 800, y: 350 },
-  velocity: { x: 0, y: 0 },
-  offset: { x: 200, y: 170 },
-  imageSrc: './img/hero2/Idle.png',
-  frames: 4,
-  scale: { x: 2.5, y: 2.5 },
-  sprites: {
-    idle: { imageSrc: './img/hero2/Idle.png', frames: 4 },
-    run: { imageSrc: './img/hero2/Run.png', frames: 8 },
-    jump: { imageSrc: './img/hero2/Jump.png', frames: 2 },
-    fall: { imageSrc: './img/hero2/Fall.png', frames: 2 },
-    attack: { imageSrc: './img/hero2/Attack1.png', frames: 4 },
-    takeHit: { imageSrc: './img/hero2/TakeHit.png', frames: 3 },
-    death: { imageSrc: './img/hero2/Death.png', frames: 7 },
-  },
-  attackBox: {
-    offset: { x: -158, y: 0 },
-    width: 200,
-    height: 120,
-  },
-  controls: {
-    moveLeft: { value: controlsP2.left, pressed: false },
-    moveRight: { value: controlsP2.right, pressed: false },
-    jump: { value: controlsP2.up, pressed: false },
-    attack: { value: controlsP2.down, pressed: false },
-    lastPressed: undefined,
-  },
-});
+const enemy = getFighter({ type: 'P2', skin: 'character2' });
 
-const timer = new Timer({ duration: 3 });
-timer.start();
+const timer = new Timer({ duration: 99 });
+
+showMenu('firstStart');
 
 animate();
 
@@ -116,6 +53,12 @@ function animate() {
   c.fillStyle = 'rgba(255,255,255, 0.1';
   c.fillRect(0, 0, canvas.width, canvas.height);
 
+  if (timer.isRunning) {
+    playersAnimation();
+  }
+}
+
+function playersAnimation() {
   getDebugInfo(player, enemy);
 
   player.update();
@@ -137,7 +80,7 @@ function animate() {
     player.controls.lastPressed === player.controls.moveRight.value
   ) {
     player.switchSprite('run');
-    if (player.position.x <= canvas.width - player.width * 2) {
+    if (player.position.x <= canvas.width - player.hitBox.width) {
       player.velocity.x = 5;
     }
   } else {
@@ -164,7 +107,7 @@ function animate() {
     enemy.controls.lastPressed === enemy.controls.moveRight.value
   ) {
     enemy.switchSprite('run');
-    if (enemy.position.x <= canvas.width - enemy.width * 2) {
+    if (enemy.position.x <= canvas.width - enemy.hitBox.x) {
       enemy.velocity.x = 5;
     }
   } else {
@@ -184,7 +127,7 @@ function animate() {
   if (
     rectangularCollision({ rect1: player, rect2: enemy }) &&
     player.isAttacking &&
-    player.framesCurrent === 4
+    player.framesCurrent === player.attackFrame
   ) {
     enemy.takeHit(player.damage);
     player.isAttacking = false;
@@ -197,7 +140,7 @@ function animate() {
     }
   }
 
-  if (player.isAttacking && player.framesCurrent === 4) {
+  if (player.isAttacking && player.framesCurrent === player.attackFrame) {
     player.isAttacking = false;
   }
 
@@ -217,7 +160,7 @@ function animate() {
     }
   }
 
-  if (enemy.isAttacking && player.framesCurrent === 2) {
+  if (enemy.isAttacking && player.framesCurrent === enemy.attackFrame) {
     enemy.isAttacking = false;
   }
 }
@@ -225,27 +168,59 @@ function animate() {
 window.addEventListener('keydown', (event) => {
   const keyCode = event.code;
 
-  if (Object.values(controlsP1).includes(keyCode)) {
-    player.control(keyCode, 'keydown');
-  } else if (Object.values(controlsP2).includes(keyCode)) {
-    enemy.control(keyCode, 'keydown');
-  } else if (keyCode === 'Space') {
-    timer.pause();
+  if (keyCode === 'Space') {
+    showMenu('pause');
+  } else if (timer.isRunning) {
+    if (
+      Object.values({
+        left: 'KeyA',
+        right: 'KeyD',
+        up: 'KeyW',
+        down: 'KeyS',
+      }).includes(keyCode)
+    ) {
+      player.control(keyCode, 'keydown');
+    } else if (
+      Object.values({
+        left: 'ArrowLeft',
+        right: 'ArrowRight',
+        up: 'ArrowUp',
+        down: 'ArrowDown',
+      }).includes(keyCode)
+    ) {
+      enemy.control(keyCode, 'keydown');
+    }
   }
 });
 
 window.addEventListener('keyup', (event) => {
   const keyCode = event.code;
 
-  if (Object.values(controlsP1).includes(keyCode)) {
-    player.control(keyCode, 'keyup');
-  } else if (Object.values(controlsP2).includes(keyCode)) {
-    enemy.control(keyCode, 'keyup');
-  } else if (keyCode === 'Space') {
-    timer.continue();
+  if (keyCode === 'Space') {
+    showMenu('continue');
+  } else if (timer.isRunning) {
+    if (
+      Object.values({
+        left: 'KeyA',
+        right: 'KeyD',
+        up: 'KeyW',
+        down: 'KeyS',
+      }).includes(keyCode)
+    ) {
+      player.control(keyCode, 'keyup');
+    } else if (
+      Object.values({
+        left: 'ArrowLeft',
+        right: 'ArrowRight',
+        up: 'ArrowUp',
+        down: 'ArrowDown',
+      }).includes(keyCode)
+    ) {
+      enemy.control(keyCode, 'keyup');
+    }
   }
 });
 
 document.querySelector('#timer').addEventListener('click', () => {
-  timer.pause();
+  showMenu('pause');
 });

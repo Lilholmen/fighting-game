@@ -6,30 +6,46 @@
       href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/gui.css" />
   </head>
   <body>
     <main class="wrapper">
-      <div class="GUI-top">
-        <div class="GUI-top__health-bar GUI-top__health-bar--player">
-          <div
-            class="health-bar__value health-bar__value--player"
-            id="playerHealth"
-          ></div>
+      <!------------------------------------ GUI ------------------------------------>
+      <section class="GUI">
+        <div class="GUI-top">
+          <div class="GUI-top__health-bar GUI-top__health-bar--player">
+            <div
+              class="health-bar__value health-bar__value--player"
+              id="playerHealth"
+            ></div>
+          </div>
+
+          <div class="GUI-top__timer" id="timer"></div>
+
+          <div class="GUI-top__health-bar GUI-top__health-bar--enemy">
+            <div
+              class="health-bar__value health-bar__value--enemy"
+              id="enemyHealth"
+            ></div>
+          </div>
         </div>
 
-        <div class="GUI-top__timer" id="timer"></div>
-
-        <div class="GUI-top__health-bar GUI-top__health-bar--enemy">
-          <div
-            class="health-bar__value health-bar__value--enemy"
-            id="enemyHealth"
-          ></div>
+        <div class="GUI-menu" id="menu">
+          <div class="GUI-menu__pause">
+            <div class="pause__start-button">
+              <div class="start-button__rectangle"></div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div class="GUI-massage" id="massage"></div>
+
+        <div class="GUI-massage" id="massage"></div>
+      </section>
+
+      <!------------------------------------ CANVAS ------------------------------------>
       <canvas></canvas>
 
+      <!------------------------------------ DEBUG ------------------------------------>
       <section class="debug">
         <div class="debug__info debug__info--player">
           <div class="info__position">
@@ -81,11 +97,13 @@
       </section>
     </main>
 
+    <script src="js/menu.js"></script>
     <script src="js/timer.js"></script>
     <script src="js/sprite.js"></script>
     <script src="js/fighter.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/debug.js"></script>
+    <script src="js/getFighter.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

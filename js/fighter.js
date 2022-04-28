@@ -8,7 +8,9 @@ class Fighter extends Sprite {
     offset = { x: 0, y: 0 },
     sprites,
     attackBox = { offset: {}, width: undefined, height: undefined },
+    hitBox = { offset: {}, width: undefined, height: undefined },
     controls,
+    attackFrame,
   }) {
     super({
       position,
@@ -19,14 +21,23 @@ class Fighter extends Sprite {
     });
 
     this.velocity = velocity;
-    this.height = 150;
-    this.width = 50;
     this.lastKey;
     this.health = 100;
     this.damage = 15;
     this.isOnTheGround = false;
     this.isDead = false;
     this.controls = controls;
+    this.attackFrame = attackFrame;
+
+    this.hitBox = {
+      position: {
+        x: this.position.x,
+        y: this.position.y,
+      },
+      offset: hitBox.offset,
+      width: hitBox.width,
+      height: hitBox.height,
+    };
 
     this.attackBox = {
       position: {
@@ -57,14 +68,36 @@ class Fighter extends Sprite {
       this.animateFrames();
     }
 
-    //attackbox
+    //attackbox collision
+    c.fillStyle = 'rgba(255,100,100,0.7)';
+    c.fillRect(
+      this.hitBox.position.x,
+      this.hitBox.position.y,
+      this.hitBox.width,
+      this.hitBox.height
+    );
+
+    c.fillStyle = 'rgba(100,100,100,0.7)';
+    c.fillRect(
+      this.attackBox.position.x,
+      this.attackBox.position.y,
+      this.attackBox.width,
+      this.attackBox.height
+    );
+
     this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
     this.attackBox.position.y = this.position.y + this.attackBox.offset.y;
+
+    this.hitBox.position.x = this.position.x + this.hitBox.offset.x;
+    this.hitBox.position.y = this.position.y + this.hitBox.offset.y;
 
     this.position.x += this.velocity.x;
     this.position.y += this.velocity.y;
 
-    if (this.position.y + this.height + this.velocity.y >= canvas.height - 59) {
+    if (
+      this.position.y + this.hitBox.height + this.velocity.y >=
+      canvas.height - 59
+    ) {
       this.velocity.y = 0;
       this.position.y = 367;
       this.isOnTheGround = true;
