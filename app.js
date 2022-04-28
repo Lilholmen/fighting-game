@@ -34,7 +34,7 @@ const shop = new Sprite({
   frames: 6,
 });
 
-const player = getFighter({ type: 'P1', skin: 'character1' });
+const player = getFighter({ type: 'P1', skin: 'character7' });
 
 const enemy = getFighter({ type: 'P2', skin: 'character2' });
 
@@ -59,7 +59,9 @@ function animate() {
 }
 
 function playersAnimation() {
-  getDebugInfo(player, enemy);
+  if (debugMode.isOn) {
+    getDebugInfo(player, enemy);
+  }
 
   player.update();
   enemy.update();
@@ -107,7 +109,7 @@ function playersAnimation() {
     enemy.controls.lastPressed === enemy.controls.moveRight.value
   ) {
     enemy.switchSprite('run');
-    if (enemy.position.x <= canvas.width - enemy.hitBox.x) {
+    if (enemy.position.x <= canvas.width - enemy.hitBox.width) {
       enemy.velocity.x = 5;
     }
   } else {
@@ -168,7 +170,9 @@ function playersAnimation() {
 window.addEventListener('keydown', (event) => {
   const keyCode = event.code;
 
-  if (keyCode === 'Space') {
+  if (keyCode === 'Backquote') {
+    debugMode.switcher();
+  } else if (keyCode === 'Space') {
     showMenu('pause');
   } else if (timer.isRunning) {
     if (

@@ -1,3 +1,16 @@
+const debugMode = {
+  isOn: true,
+  htmlElement: document.querySelector('.debug'),
+
+  switcher() {
+    this.isOn = !this.isOn;
+
+    this.isOn
+      ? this.htmlElement.classList.remove('__display-none')
+      : this.htmlElement.classList.add('__display-none');
+  },
+};
+
 function getDebugInfo(p1, p2) {
   document.querySelector('#player-position').textContent = cordToXY(
     p1.position

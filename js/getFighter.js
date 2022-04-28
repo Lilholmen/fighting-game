@@ -1,5 +1,4 @@
 function getFighter({ type, skin }) {
-  const fighter = {};
   const controls = {
     moveLeft: { value: keyBinds[type].left, pressed: false },
     moveRight: { value: keyBinds[type].right, pressed: false },
@@ -7,12 +6,30 @@ function getFighter({ type, skin }) {
     attack: { value: keyBinds[type].down, pressed: false },
     lastPressed: undefined,
   };
+  const fighter = deepAssign(
+    {},
+    characters[skin],
+    { controls },
+    commonParameters[type]
+  );
 
-  Object.assign(fighter, deepClone(characters[skin]), { controls });
+  if (debugMode.isOn) {
+    console.log(fighter);
+  }
 
-  console.log(fighter);
   return new Fighter(fighter);
 }
+
+const commonParameters = {
+  P1: {
+    position: { x: 100, y: 400 },
+    velocity: { x: 0, y: 0 },
+  },
+  P2: {
+    position: { x: 800, y: 400 },
+    velocity: { x: 0, y: 0 },
+  },
+};
 
 const keyBinds = {
   P1: { left: 'KeyA', right: 'KeyD', up: 'KeyW', down: 'KeyS' },
@@ -26,8 +43,6 @@ const keyBinds = {
 
 const characters = {
   character1: {
-    position: { x: 100, y: 350 },
-    velocity: { x: 0, y: 0 },
     offset: { x: 200, y: 155 },
     imageSrc: '/img/hero1/Idle.png',
     frames: 8,
@@ -55,8 +70,6 @@ const characters = {
   },
 
   character2: {
-    position: { x: 800, y: 350 },
-    velocity: { x: 0, y: 0 },
     offset: { x: 200, y: 170 },
     imageSrc: '/img/hero2/Idle.png',
     frames: 4,
@@ -84,8 +97,6 @@ const characters = {
   },
 
   character3: {
-    position: { x: 100, y: 350 },
-    velocity: { x: 0, y: 0 },
     offset: { x: 200, y: 150 },
     imageSrc: '/img/hero3/Idle.png',
     frames: 10,
@@ -99,6 +110,11 @@ const characters = {
       takeHit: { imageSrc: '/img/hero3/TakeHit.png', frames: 1 },
       death: { imageSrc: '/img/hero3/Death.png', frames: 10 },
     },
+    hitBox: {
+      offset: { x: -40, y: 0 },
+      width: 90,
+      height: 150,
+    },
     attackFrame: 3,
     attackBox: {
       offset: { x: -50, y: 10 },
@@ -108,8 +124,6 @@ const characters = {
   },
 
   character4: {
-    position: { x: 100, y: 200 },
-    velocity: { x: 0, y: 0 },
     offset: { x: 200, y: 161 },
     imageSrc: '/img/hero4/Idle.png',
     frames: 8,
@@ -122,6 +136,11 @@ const characters = {
       attack: { imageSrc: '/img/hero4/Attack1.png', frames: 5 },
       takeHit: { imageSrc: '/img/hero4/TakeHit.png', frames: 3 },
       death: { imageSrc: '/img/hero4/Death.png', frames: 8 },
+    },
+    hitBox: {
+      offset: { x: 0, y: 0 },
+      width: 75,
+      height: 150,
     },
     attackFrame: 3,
     attackBox: {
@@ -147,6 +166,11 @@ const characters = {
       takeHit: { imageSrc: '/img/hero5/TakeHit.png', frames: 14 },
       death: { imageSrc: '/img/hero5/Death.png', frames: 24 },
     },
+    hitBox: {
+      offset: { x: -40, y: 0 },
+      width: 85,
+      height: 150,
+    },
     attackFrame: 10,
     attackBox: {
       offset: { x: 60, y: 40 },
@@ -171,6 +195,11 @@ const characters = {
       takeHit: { imageSrc: '/img/hero6/TakeHit.png', frames: 4 },
       death: { imageSrc: '/img/hero6/Death.png', frames: 11 },
     },
+    hitBox: {
+      offset: { x: -10, y: 0 },
+      width: 110,
+      height: 150,
+    },
     attackFrame: 4,
     attackBox: {
       offset: { x: -23, y: -15 },
@@ -180,10 +209,6 @@ const characters = {
   },
 
   character7: {
-    position: { x: 100, y: 200 },
-    with: 100,
-    height: 150,
-    velocity: { x: 0, y: 0 },
     offset: { x: 100, y: 75 },
     imageSrc: '/img/hero7/Idle.png',
     frames: 10,

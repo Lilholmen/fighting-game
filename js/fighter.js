@@ -69,21 +69,23 @@ class Fighter extends Sprite {
     }
 
     //attackbox collision
-    c.fillStyle = 'rgba(255,100,100,0.7)';
-    c.fillRect(
-      this.hitBox.position.x,
-      this.hitBox.position.y,
-      this.hitBox.width,
-      this.hitBox.height
-    );
+    if (debugMode.isOn) {
+      c.fillStyle = 'rgba(255,100,100,0.7)';
+      c.fillRect(
+        this.hitBox.position.x,
+        this.hitBox.position.y,
+        this.hitBox.width,
+        this.hitBox.height
+      );
 
-    c.fillStyle = 'rgba(100,100,100,0.7)';
-    c.fillRect(
-      this.attackBox.position.x,
-      this.attackBox.position.y,
-      this.attackBox.width,
-      this.attackBox.height
-    );
+      c.fillStyle = 'rgba(100,100,100,0.7)';
+      c.fillRect(
+        this.attackBox.position.x,
+        this.attackBox.position.y,
+        this.attackBox.width,
+        this.attackBox.height
+      );
+    }
 
     this.attackBox.position.x = this.position.x + this.attackBox.offset.x;
     this.attackBox.position.y = this.position.y + this.attackBox.offset.y;

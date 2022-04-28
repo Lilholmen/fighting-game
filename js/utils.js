@@ -21,4 +21,12 @@ function deepClone(obj) {
   return copy;
 }
 
-function deepAssign(...objs) {}
+function deepAssign(...objs) {
+  const endObject = {};
+
+  objs.map((obj) => {
+    Object.assign(endObject, deepClone(obj));
+  });
+
+  return endObject;
+}
