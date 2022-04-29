@@ -24,10 +24,12 @@ const commonParameters = {
   P1: {
     position: { x: 100, y: 400 },
     velocity: { x: 0, y: 0 },
+    spawnPosition: 'left',
   },
   P2: {
     position: { x: 800, y: 400 },
     velocity: { x: 0, y: 0 },
+    spawnPosition: 'right',
   },
 };
 

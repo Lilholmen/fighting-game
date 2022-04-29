@@ -11,6 +11,7 @@ class Fighter extends Sprite {
     hitBox = { offset: {}, width: undefined, height: undefined },
     controls,
     attackFrame,
+    spawnPosition,
   }) {
     super({
       position,
@@ -28,6 +29,7 @@ class Fighter extends Sprite {
     this.isDead = false;
     this.controls = controls;
     this.attackFrame = attackFrame;
+    this.spawnPosition = spawnPosition;
 
     this.hitBox = {
       position: {
@@ -52,7 +54,7 @@ class Fighter extends Sprite {
 
     this.framesCurrent = 0;
     this.framesElapsed = 0;
-    this.framesHold = 5;
+    this.framesHold = 6;
 
     this.sprites = sprites;
 
@@ -106,6 +108,8 @@ class Fighter extends Sprite {
     } else {
       this.velocity.y += gravity;
     }
+
+    this.animate();
   }
 
   attack() {
@@ -120,6 +124,37 @@ class Fighter extends Sprite {
       this.switchSprite('takeHit');
     } else {
       this.switchSprite('death');
+    }
+  }
+
+  animate() {
+    this.velocity.x = 0;
+
+    if (
+      this.controls.moveLeft.pressed &&
+      this.controls.lastPressed === this.controls.moveLeft.value
+    ) {
+      this.switchSprite('run');
+      if (this.position.x >= 0) {
+        this.velocity.x = -5;
+      }
+    } else if (
+      this.controls.moveRight.pressed &&
+      this.controls.lastPressed === this.controls.moveRight.value
+    ) {
+      this.switchSprite('run');
+      if (this.position.x <= canvas.width - this.hitBox.width) {
+        this.velocity.x = 5;
+      }
+    } else {
+      this.switchSprite('idle');
+    }
+
+    if (this.velocity.y < 0) {
+      this.switchSprite('jump');
+    }
+    if (this.velocity.y > 0) {
+      this.switchSprite('fall');
     }
   }
 
