@@ -1,24 +1,34 @@
 function showMenu(gameState) {
   const menu = document.querySelector('#menu');
+  const health = document.querySelectorAll('.health-bar__value');
 
-  menu.style.display = 'flex';
   switch (gameState) {
-    case 'firstStart':
-      menu
-        .querySelector('.pause__start-button')
-        .addEventListener('click', () => {
-          menu.style.display = 'none';
-          gameEntities.timer.continue();
-        });
+    case 'menu':
+      menu.classList.remove('__display-none');
 
+      game.gameState.changeState = gameState;
       break;
     case 'pause':
-      menu.style.display = 'flex';
-      gameEntities.timer.pause();
+      menu.classList.remove('__display-none');
+
+      game.gameEntities.timer.pause();
+      game.gameState.changeState = gameState;
       break;
-    case 'continue':
-      menu.style.display = 'none';
-      gameEntities.timer.continue();
+    case 'fight':
+      menu.classList.add('__display-none');
+
+      game.gameEntities.timer.continue();
+      game.gameState.changeState = gameState;
+      break;
+    case 'finish':
+      menu.classList.remove('__display-none');
+      health[0].style.width = '100%';
+      health[1].style.width = '100%';
+
+      game.gameEntities.timer.end();
+
+      massage.hideMassage();
+      game.gameState.changeState = gameState;
       break;
   }
 }

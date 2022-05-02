@@ -12,6 +12,9 @@ const debugMode = {
 };
 
 function getDebugInfo(p1, p2) {
+  document.querySelector('#game-state').textContent =
+    game.gameState.currentState;
+
   document.querySelector('#player-position').textContent = cordToXY(
     p1.position
   );
@@ -34,6 +37,6 @@ window.addEventListener('keydown', (event) => {
     event.key,
     event.keyCode,
     event.code,
-    gameEntities.timer.currentValue
+    game.gameEntities.timer.currentValue
   );
 });

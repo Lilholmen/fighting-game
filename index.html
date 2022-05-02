@@ -8,6 +8,7 @@
     />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/gui.css" />
+    <link rel="stylesheet" href="css/display.css" />
   </head>
   <body>
     <main class="wrapper">
@@ -42,7 +43,7 @@
           </div>
         </div>
 
-        <div class="GUI-massage" id="massage"></div>
+        <div class="GUI-massage __display-none" id="massage"></div>
       </section>
 
       <!------------------------------------ CANVAS ------------------------------------>
@@ -50,6 +51,16 @@
 
       <!------------------------------------ DEBUG ------------------------------------>
       <section class="debug __display-none">
+        <div class="debug__info debug__info--game">
+          <div class="info__game-state">
+            game-state:
+            <span
+              class="info__data info__data--game-state"
+              id="game-state"
+            ></span>
+          </div>
+        </div>
+
         <div class="debug__info debug__info--player">
           <div class="info__position">
             position:
@@ -101,6 +112,7 @@
     </main>
 
     <script src="js/menu.js"></script>
+    <script src="js/game.js"></script>
     <script src="js/timer.js"></script>
     <script src="js/sprite.js"></script>
     <script src="js/fighter.js"></script>

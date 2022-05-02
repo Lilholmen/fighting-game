@@ -31,7 +31,9 @@ class Timer {
 
   end() {
     clearTimeout(this.timerId);
+
     this.isRunning = false;
-    massage.displayMassage(gameEntities.player, gameEntities.enemy);
+
+    massage.displayMassage(game.gameEntities.player, game.gameEntities.enemy);
   }
 }

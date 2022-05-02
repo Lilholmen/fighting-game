@@ -106,7 +106,7 @@ class Fighter extends Sprite {
       this.position.y = 367;
       this.isOnTheGround = true;
     } else {
-      this.velocity.y += gravity;
+      this.velocity.y += game.gameRules.gravity;
     }
 
     this.animate();

@@ -35,16 +35,23 @@ function deepAssign(...objs) {
 
 const massage = {
   displayDiv: document.querySelector('#massage'),
+  hideClass: '__display-none',
   win: 'You win',
   lose: 'You lose',
   tie: 'Tie',
 
   displayMassage(player1, player2) {
+    this.displayDiv.classList.remove(this.hideClass);
+
     this.displayDiv.textContent =
       player1.health > player2.health
         ? this.win
         : player2.health > player1.health
         ? this.lose
         : this.tie;
+  },
+
+  hideMassage() {
+    this.displayDiv.classList.add(this.hideClass);
   },
 };

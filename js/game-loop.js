@@ -1,36 +1,3 @@
-const gameState = {
-  menu: { id: 0, isCurrent: true },
-  fight: { id: 1, isCurrent: false },
-  pause: { id: 2, isCurrent: false },
-  finish: { id: 3, isCurrent: false },
-
-  get currentState() {
-    for (const state in this) {
-      if (this[state].isCurrent) {
-        return this[state].id;
-      }
-    }
-
-    console.log('State error', this);
-    return -1;
-  },
-
-  set changeState(id) {
-    if (![0, 1, 2, 3].includes(id)) {
-      console.log('Wrong state id');
-      return -1;
-    }
-
-    for (const state in this) {
-      if (this[state]?.id === id) {
-        this[state].isCurrent = true;
-      } else if (this[state]?.isCurrent) {
-        this[state].isCurrent = false;
-      }
-    }
-  },
-};
-
 const background = new Sprite({
   position: { x: 0, y: 0 },
   imageSrc: './img/background.png',
@@ -43,27 +10,60 @@ const shop = new Sprite({
   frames: 6,
 });
 
-const gameEntities = {
-  player: null,
-  enemy: null,
-  timer: null,
-};
-
-const gravity = 0.7;
+const game = new Game({
+  player: getFighter({ type: 'P1', skin: 'character7' }),
+  enemy: getFighter({ type: 'P2', skin: 'enemy' }),
+  timer: new Timer({ duration: 99 }),
+  gravity: 0.7,
+  playerSkin: 7,
+});
 
 function gameLoop() {
-  start();
+  showMenu('menu');
+  if (game.gameState.currentState === 'menu') {
+    animate();
+  } else if (game.gameState.currentState === 'finish') {
+    game.gameEntities.player = getFighter({ type: 'P1', skin: 'character7' });
+    game.gameEntities.enemy = getFighter({ type: 'P2', skin: 'enemy' });
+    game.gameEntities.timer = new Timer({ duration: 99 });
+
+    showMenu('menu');
+  }
 }
 
-function start() {
-  gameEntities.player = getFighter({ type: 'P1', skin: 'character7' });
+function animate() {
+  if (!game.gameEntities.player.isDead && !game.gameEntities.enemy.isDead) {
+    window.requestAnimationFrame(animate);
 
-  gameEntities.enemy = getFighter({ type: 'P2', skin: 'enemy' });
+    if (debugMode.isOn) {
+      getDebugInfo(game.gameEntities.player, game.gameEntities.enemy);
+    }
 
-  gameEntities.timer = new Timer({ duration: 99 });
+    background.update();
+    shop.update();
 
-  showMenu('firstStart');
-  console.log(gameEntities);
+    c.fillStyle = 'rgba(255,255,255, 0.1';
+    c.fillRect(0, 0, canvas.width, canvas.height);
 
-  animate();
+    if (game.gameEntities.timer.isRunning) {
+      game.gameEntities.player.update();
+      game.gameEntities.enemy.update();
+
+      fighterCollision(
+        game.gameEntities.player,
+        game.gameEntities.enemy,
+        game.gameEntities.timer
+      );
+      fighterCollision(
+        game.gameEntities.enemy,
+        game.gameEntities.player,
+        game.gameEntities.timer
+      );
+    }
+  } else {
+    game.gameEntities.timer.end();
+    game.gameState.changeState = 'finish';
+
+    gameLoop();
+  }
 }
