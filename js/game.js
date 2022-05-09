@@ -20,6 +20,7 @@ class Game {
       },
 
       set changeState(name) {
+        console.log(name);
         if (!this.states.hasOwnProperty(name)) {
           console.log('Wrong state name');
           return -1;

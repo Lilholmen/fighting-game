@@ -1,4 +1,4 @@
-function fighterCollision(fighterAttack, fighterTakeHit, timer) {
+function fighterCollision(fighterAttack, fighterTakeHit) {
   if (
     rectangularCollision({
       rect1: fighterAttack,

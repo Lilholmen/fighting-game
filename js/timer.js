@@ -15,6 +15,7 @@ class Timer {
 
   pause() {
     clearTimeout(this.timerId);
+
     this.isRunning = false;
   }
 
@@ -33,7 +34,13 @@ class Timer {
     clearTimeout(this.timerId);
 
     this.isRunning = false;
+  }
 
-    massage.displayMassage(game.gameEntities.player, game.gameEntities.enemy);
+  restart(newDuration) {
+    this.duration = newDuration;
+
+    this.guiTimer.textContent = this.duration;
+
+    this.continue();
   }
 }

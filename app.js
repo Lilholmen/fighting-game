@@ -72,6 +72,4 @@ document.querySelector('#timer').addEventListener('click', () => {
 
 document.querySelector('.pause__start-button').addEventListener('click', () => {
   showMenu('fight');
-
-  game.gameEntities.timer.continue();
 });

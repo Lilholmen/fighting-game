@@ -23,9 +23,9 @@ function gameLoop() {
   if (game.gameState.currentState === 'menu') {
     animate();
   } else if (game.gameState.currentState === 'finish') {
-    game.gameEntities.player = getFighter({ type: 'P1', skin: 'character7' });
+    game.gameEntities.player = getFighter({ type: 'P1', skin: 'character2' });
     game.gameEntities.enemy = getFighter({ type: 'P2', skin: 'enemy' });
-    game.gameEntities.timer = new Timer({ duration: 99 });
+    game.gameEntities.timer.restart(30);
 
     showMenu('menu');
   }
