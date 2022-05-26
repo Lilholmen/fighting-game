@@ -11,14 +11,23 @@ const shop = new Sprite({
 });
 
 const game = new Game({
-  player: getFighter({ type: 'P1', skin: 'character7' }),
+  player: getFighter({ type: 'P1', skin: 'character1' }),
   enemy: getFighter({ type: 'P2', skin: 'enemy' }),
   timer: new Timer({ duration: 99 }),
   gravity: 0.7,
   playerSkin: 7,
 });
 
+let currentScene = new Scene2({
+  sceneTag: 'menu',
+  background: { backgroundImage: background, environment: [shop] },
+});
+
 function gameLoop() {
+  currentScene.start();
+}
+
+/* function gameLoop() {
   showMenu('menu');
   if (game.gameState.currentState === 'menu') {
     animate();
@@ -29,9 +38,9 @@ function gameLoop() {
 
     showMenu('menu');
   }
-}
+} */
 
-function animate() {
+/* function animate() {
   if (!game.gameEntities.player.isDead && !game.gameEntities.enemy.isDead) {
     window.requestAnimationFrame(animate);
 
@@ -66,4 +75,4 @@ function animate() {
 
     gameLoop();
   }
-}
+} */
