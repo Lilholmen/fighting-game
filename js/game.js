@@ -1,17 +1,17 @@
 class Game {
   constructor({ player, enemy, timer, gravity, playerSkin = 1 }) {
-    this.gameState = {
-      states: {
+    this.gameScenes = {
+      scenes: {
         menu: { id: 0, isCurrent: true },
         fight: { id: 1, isCurrent: false },
         pause: { id: 2, isCurrent: false },
         finish: { id: 3, isCurrent: false },
       },
 
-      get currentState() {
-        for (const state in this.states) {
-          if (this.states[state].isCurrent) {
-            return state;
+      get currentScene() {
+        for (const scene in this.scenes) {
+          if (this.scenes[scene].isCurrent) {
+            return scene;
           }
         }
 
@@ -19,18 +19,18 @@ class Game {
         return -1;
       },
 
-      set changeState(name) {
+      set changeScene(name) {
         console.log(name);
-        if (!this.states.hasOwnProperty(name)) {
+        if (!this.scenes.hasOwnProperty(name)) {
           console.log('Wrong state name');
           return -1;
         }
 
-        for (const state in this.states) {
+        for (const scene in this.scenes) {
           if (state === name) {
-            this.states[state].isCurrent = true;
-          } else if (this.states[state].isCurrent) {
-            this.states[state].isCurrent = false;
+            this.scenes[scene].isCurrent = true;
+          } else if (this.scenes[scene].isCurrent) {
+            this.scenes[scene].isCurrent = false;
           }
         }
       },
